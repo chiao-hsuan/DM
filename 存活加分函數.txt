@@ -1,0 +1,32 @@
+data=read.table("C:/Users/Admin/Desktop/survBrainBCNU.txt",header=T)
+
+
+
+
+f=function(data,aa,bb) 
+#data為資料名稱#aa為時間在資料的名稱#bb為設限在資料的名稱
+{
+time=data$aa
+censor=data$bb
+n=NULL
+d=NULL
+s=NULL
+b=NULL
+t=sort(time[censor=="1"])
+for(i in 1:length(t))
+{
+n[i]=length(which(time>=t[i]&censor=="1"))
+d[i]=length(which(time==t[i]&censor=="1"))
+s[i]=(n[i]-d[i])/n[i]
+}
+ps=cumprod(s)  #ps為存活機率
+plot(t,ps,type="s",main="KM curve")
+censorpoint=sort(time[censor=="0"])
+for(i in 1:length(censorpoint))
+{
+a=(t<=censorpoint[i])
+b[i]=length(which(a=="TRUE"))
+points(censorpoint[i],ps[b[i]])
+}
+return(ps)
+}
